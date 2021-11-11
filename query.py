@@ -45,6 +45,7 @@ def query_domains(domain: str):
     unknows = domain.count("?")
     total = len(string.ascii_lowercase) ** unknows
     domain_fmt = domain.replace("?", "%s")
+    index = 0
     for values in itertools.combinations_with_replacement(
         string.ascii_lowercase, unknows
     ):
@@ -52,9 +53,17 @@ def query_domains(domain: str):
         new_domain = domain_fmt % values
         if not whois(new_domain):
             found += 1
-            logging.info("%s/%s %s has not registered yet.", found, total, new_domain)
+            logging.info(
+                "%s/%s, found: %s, %s has not registered yet.",
+                index,
+                found,
+                total,
+                new_domain,
+            )
         else:
-            logging.info("%s/%s %s is registered.", found, total, new_domain)
+            logging.info(
+                "%s/%s, found: %s, %s is registered.", index, found, total, new_domain
+            )
 
 
 if __name__ == "__main__":
