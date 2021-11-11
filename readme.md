@@ -14,3 +14,7 @@ Make sure `whois` is installed,
 ```bash
 sudo apt install whois
 ```
+
+## TODO
+
+- [ ] add `start-from` option
