@@ -31,7 +31,7 @@ def logger_init(domain: str):
 
 
 def whois(domain):
-    """check if a domain is registered"""
+    """check if a domain has been registered"""
     whois_cmd = f'whois {domain} | grep "Domain Name"'
     proc = subprocess.run(
         whois_cmd, shell=True, capture_output=True, text=True, check=False
@@ -39,19 +39,23 @@ def whois(domain):
     return proc.returncode == 0
 
 
-def query_domains(domain: str):
+def query_domains(domain: str, start_from=None):
     """query domains for all matchings"""
     found = 0
     unknows = domain.count("?")
     total = len(string.ascii_lowercase) ** unknows
     domain_fmt = domain.replace("?", "%s")
     index = 0
-    for values in itertools.combinations_with_replacement(
-        string.ascii_lowercase, unknows
-    ):
+    start = start_from is None
+    for values in itertools.product(string.ascii_lowercase, repeat=unknows):
         # pytlint: disable=logging-not-lazy
         new_domain = domain_fmt % values
         index += 1
+        if not start:
+            if new_domain == start_from:
+                start = True
+            else:
+                continue
         if not whois(new_domain):
             found += 1
             logging.info(
@@ -73,9 +77,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--domains", nargs="+", required=True, help="e.g. --domains ???.com"
     )
+    parser.add_argument(
+        "--start-from",
+        dest="start_from",
+        type=str,
+        help="start from given string pattern.",
+    )
 
     args = parser.parse_args()
-
+    print(args)
     for d in args.domains:
         logger_init(d)
-        query_domains(d)
+        query_domains(d, args.start_from)
