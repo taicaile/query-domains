@@ -51,18 +51,19 @@ def query_domains(domain: str):
     ):
         # pytlint: disable=logging-not-lazy
         new_domain = domain_fmt % values
+        index += 1
         if not whois(new_domain):
             found += 1
             logging.info(
                 "%s/%s, found: %s, %s has not registered yet.",
                 index,
-                found,
                 total,
+                found,
                 new_domain,
             )
         else:
             logging.info(
-                "%s/%s, found: %s, %s is registered.", index, found, total, new_domain
+                "%s/%s, found: %s, %s is registered.", index, total, found, new_domain
             )
 
 
