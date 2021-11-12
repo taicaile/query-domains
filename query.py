@@ -18,7 +18,7 @@ def logger_init(domain: str):
         level=logging.DEBUG,
         format="%(message)s",
         filename=str(date.today()) + "_" + domain + ".log",
-        filemode="w",
+        filemode="a",
     )
 
     console = logging.StreamHandler()

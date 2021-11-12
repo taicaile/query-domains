@@ -22,3 +22,8 @@ site/
 
 # vscode remote
 .devcontainer
+
+# temp
+check.*
+
+available.txt
